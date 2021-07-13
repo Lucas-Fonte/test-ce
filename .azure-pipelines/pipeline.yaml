@@ -1,0 +1,41 @@
+trigger:
+  - main
+
+pr:
+  - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '14.x'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install
+    displayName: 'npm install'
+
+  - task: DownloadSecureFile@1
+    name: authkey
+    displayName: 'Download Service Account Key'
+    inputs:
+      secureFile: 'plated-field-319621-0ad41bf8702d.json'
+      retryCount: '2'
+
+  - script: echo $(authkey.secureFilePath)
+      gcloud auth activate-service-account --key-file $(authkey.secureFilePath)
+      gcloud compute --project "plated-field-319621" ssh --zone us-central1-a \ instance-2
+
+      # update apt-get
+      sudo apt-get update
+      # download npm
+      curl -sL \ https://deb.nodesource.com/setup_10.x \ | sudo -E bash -
+
+      # install node, git and dependencies inside VM
+      sudo apt-get install git nodejs
+      sudo npm install
+      sudo npm start
+
+    displayName: 'deploy cloud function'
