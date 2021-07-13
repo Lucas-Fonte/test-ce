@@ -25,12 +25,15 @@ steps:
       retryCount: '2'
 
   - script: echo $(authkey.secureFilePath)
-      gcloud auth activate-service-account --key-file $(authkey.secureFilePath)
-      gcloud compute --project "plated-field-319621" ssh --zone us-central1-a \ instance-2
-      sudo apt-get update
-      curl -sL \ https://deb.nodesource.com/setup_14.x \ | sudo -E bash -
-      sudo apt-get install git nodejs
-      sudo npm install
-      sudo npm start
-
     displayName: 'deploy to compute engine'
+
+  - script: gcloud auth activate-service-account --key-file $(authkey.secureFilePath)
+    displayName:
+      'Sign in to publisher SA'
+
+      # gcloud compute --project "plated-field-319621" ssh --zone us-central1-a \ instance-2
+      # sudo apt-get update
+      # curl -sL \ https://deb.nodesource.com/setup_14.x \ | sudo -E bash -
+      # sudo apt-get install git nodejs
+      # sudo npm install
+      # sudo npm start
