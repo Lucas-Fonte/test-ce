@@ -30,7 +30,7 @@ steps:
   - script: gcloud auth activate-service-account --key-file $(authkey.secureFilePath)
     displayName: 'Sign in to publisher SA'
 
-  - script: gcloud compute --project "plated-field-319621" ssh --zone us-central1-a instance-2
+  - script: gcloud beta compute ssh --zone "us-central1-a" "instance-2"  --project "plated-field-319621"
     displayName: 'Access VM'
 
   - script: sudo apt-get update
